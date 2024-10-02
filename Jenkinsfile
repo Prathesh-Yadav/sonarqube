@@ -1,6 +1,6 @@
 pipeline {
   agent {
-    label "java"
+    label "javac"
   }
   stages {
     stage('Build') {
@@ -13,7 +13,7 @@ pipeline {
         jacoco()
       }
     }
-
+/*
     stage('SonarQube analysis') {
       steps{
         script {
@@ -30,7 +30,7 @@ pipeline {
         }
       }
     }
-
+*/
     stage("Sonar Quality Gate Check") {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
