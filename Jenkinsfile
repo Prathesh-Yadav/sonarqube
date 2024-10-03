@@ -21,10 +21,10 @@ pipeline {
           withSonarQubeEnv('jenkins-sonar') {
             sh """
               ${scannerHome}/bin/sonar-scanner \
-              -Dsonar.projectKey=javawebapp \
-              -Dsonar.projectName=javawebapp \
-              -Dsonar.projectVersion=1.0 \
-              -Dsonar.java.binaries='target/classes'
+              -sonar.projectKey=javawebapp \
+              -sonar.projectName=javawebapp \
+              -sonar.projectVersion=1.0 \
+              -sonar.java.binaries='target/classes'
             """
           }
         }
