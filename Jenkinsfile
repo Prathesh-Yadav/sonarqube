@@ -45,9 +45,9 @@ pipeline {
             }
     }
 
-    stage('Deploy') {
+    stage('Upload to Nexus') {
       steps{
-        sh 'echo "Here we deploy the build"'
+        nexusArtifactUploader artifacts: [[artifactId: 'SimpleWebApplication\', classifier: '', file: 'target/SimpleWebApplication.war', type: 'war']], credentialsId: 'nexus-jenkins', groupId: 'com.maven', nexusUrl: 'https://172.31.34.37:8081/', nexusVersion: 'nexus3', protocol: 'http', repository: 'maven-release-javawebapp', version: '1.0.0-SNAPSHOT'
       }
     }
     stage('Deploy to Tomcat') {
