@@ -13,7 +13,7 @@ pipeline {
         jacoco()
       }
     }
-/*
+
     stage('SonarQube analysis') {
       steps{
         script {
@@ -31,8 +31,8 @@ pipeline {
       }
     }
 
-*/
-    /*
+
+    
     stage("Sonar Quality Gate Check") {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
@@ -45,7 +45,7 @@ pipeline {
                 } // End of timeout
             }
     }
-*/
+
     /*
     stage('Upload to Nexus') {
       steps{
