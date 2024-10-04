@@ -32,18 +32,17 @@ pipeline {
     }
 
 
-    
     stage("Sonar Quality Gate Check") {
-            steps {
-                timeout(time: 1, unit: 'HOURS') {
-                    script {
-                        def qualityGate = waitForQualityGate()
-                        if (qualityGate.status != 'OK') {
-                            error "Pipeline aborted due to quality gate failure: ${qualityGate.status}"
-                        }
-                    }
-                } // End of timeout
+      steps {
+        timeout(time: 1, unit: 'HOURS') {
+          script {
+            def qualityGate = waitForQualityGate()
+            if (qualityGate.status != 'OK') {
+              error "Pipeline aborted due to quality gate failure: ${qualityGate.status}"
             }
+          }
+        } 
+      }
     }
 
     
@@ -59,8 +58,13 @@ pipeline {
       }
       steps{
         sh 'sudo systemctl stop tomcat'
-        sh 'sudo cp /usr/local/tomcat/webapps/SimpleWebApplication.war /usr/local/tomcat/webapps/SimpleWebApplication_backup_$(date + %Y%m%d%H%M%S).war || true'
-        sh 'sudo wget http://52.66.111.80:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/1.0.0-20241004.205206-1/SimpleWebApplication-1.0.0-20241004.205206-1.war -O /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication-1.0.0-20241004.205206-1.war'
+        
+        // Update the cp command with the correct path
+        sh 'sudo cp /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication*.war /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication_backup_$(date +"%Y%m%d%H%M%S").war || true'
+        
+        // Updated wget command with credentials
+        sh 'sudo wget --user=admin --password=admin http://52.66.111.80:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/1.0.0-20241004.205206-1/SimpleWebApplication-1.0.0-20241004.205206-1.war -O /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication-1.0.0-20241004.205206-1.war'
+        
         sh 'sudo systemctl start tomcat'
       }
     }
