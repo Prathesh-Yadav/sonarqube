@@ -76,23 +76,36 @@ pipeline {
         sh 'sudo cp /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication*.war /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication_backup_$(date +"%Y%m%d%H%M%S").war || true'
         */
 sh '''
-  # Get the index page from the Nexus repository
+  # Get the index page from the Nexus repository (listing the last four folders)
   curl -s http://52.66.111.80:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/ -o index.html
+
+  # Extract the last four folders, then pick the first one
+  LATEST_FOLDER=$(grep -o 'href="[^"]*/"' index.html | sed 's/href="//g' | sed 's/"//g' | tail -4 | head -1)
+
+  # Check if LATEST_FOLDER is not empty
+  if [ -z "$LATEST_FOLDER" ]; then
+    echo "No folder found!"
+    exit 1
+  fi
   
-  # Find the latest WAR file in the Nexus repository
-  LATEST_WAR=$(grep -o 'SimpleWebApplication-[0-9.\\-]*.war' index.html | sort -V | tail -1)
+  # Fetch the index page of the selected folder
+  curl -s http://52.66.111.80:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/$LATEST_FOLDER -o folder_index.html
   
-  # Check if the LATEST_WAR is not empty
+  # Find the latest WAR file inside the selected folder
+  LATEST_WAR=$(grep -o 'SimpleWebApplication-[0-9.\\-]*.war' folder_index.html | sort -V | tail -1)
+  
+  # Check if LATEST_WAR is not empty
   if [ -z "$LATEST_WAR" ]; then
     echo "No WAR file found!"
     exit 1
   fi
-  
-  # Download the latest WAR file
+
+  # Download the latest WAR file from the selected folder
   wget --user=admin --password=admin \
-  http://52.66.111.80:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/$LATEST_WAR \
+  http://52.66.111.80:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/$LATEST_FOLDER$LATEST_WAR \
   -O /home/tomcat/apache-tomcat-10.1.30/webapps/$LATEST_WAR
 '''
+
 
         
         sh 'sudo systemctl start tomcat'
