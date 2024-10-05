@@ -60,25 +60,26 @@ pipeline {
           nexusUrl: '52.66.111.80:8081', 
           nexusVersion: 'nexus3', 
           protocol: 'http', 
-          repository: 'maven-snapshots', 
-          version: '1.0.0-SNAPSHOT'
+          repository: 'maven-release', 
+          version: '1.0.0'
         )
       }
     }
-    
+      /*
     stage('Deploy to Tomcat') {
       agent {
         label "Tomcat"
       }
       steps {
         sh 'sudo systemctl stop tomcat'
-        /*
+      
         sh 'sudo cp /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication*.war /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication_backup_$(date +"%Y%m%d%H%M%S").war || true'
-        */
+        
         sh 'sudo wget --user=admin --password=admin http://52.66.111.80:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/${LATEST_VERSION}/SimpleWebApplication-${LATEST_VERSION}.war -O /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication-${LATEST_VERSION}.war'
         
         sh 'sudo systemctl start tomcat'
       }
     }
+*/
   }
 }
