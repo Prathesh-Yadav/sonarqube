@@ -77,7 +77,7 @@ pipeline {
         */
     sh '''
       curl -s http://52.66.111.80:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT > index.html
-      LATEST_WAR=$(cat index.html | grep -o "SimpleWebApplication-[0-9]*\.war" | tail -1)
+      LATEST_WAR=$(cat index.html | grep -o "SimpleWebApplication-[0-9]*.war" | tail -1)
       wget --user=admin --password=admin http://52.66.111.80:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/$LATEST_WAR -O /home/tomcat/apache-tomcat-10.1.30/webapps/$LATEST_WAR
       rm index.html
     '''
