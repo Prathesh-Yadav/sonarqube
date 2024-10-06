@@ -67,35 +67,43 @@ pipeline {
       }
     }
   
-        stage('Deploy to Tomcat') {
-      agent {
+stage('Deploy to Tomcat') {
+    agent {
         label "Tomcat"
-      }
-      steps {
-        sh 'sudo systemctl stop tomcat'
-      /*
-        sh 'sudo cp /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication*.war /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication_backup_$(date +"%Y%m%d%H%M%S").war || true'
-        */
-        def NEXUS_URL = "http://13.201.120.172:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/"
-        
-        // Use the 'sh' step to run shell commands and capture the output
-        def LATEST_BUILD = sh(script: """
-            curl -s "${NEXUS_URL}" | grep 'SimpleWebApplication-1.0.0-*.*-*.war' | head -1 | tail -4
-        """, returnStdout: true).trim()
-        
-        echo "LATEST_BUILD is: ${LATEST_BUILD}"        
-        sh '''
-      
-
-             
-          wget --user=admin --password=admin http://13.201.120.172:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/"$LATEST_BUILD" -O /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication-1.0.0-*.*-*.war
-                  
-      
-        '''
-        
-        sh 'sudo systemctl start tomcat'
-      }
     }
+    steps {
+        sh 'sudo systemctl stop tomcat'
+        
+        // Use a script block to run Groovy code and shell commands
+        script {
+            def NEXUS_URL = "http://13.201.120.172:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/"
+            
+            // Debug: Print the content fetched from the URL
+            def curlOutput = sh(script: "curl -s \"$NEXUS_URL\"", returnStdout: true).trim()
+            echo "Curl Output:\n${curlOutput}"
+            
+            // Extract the latest build name
+            def LATEST_BUILD = sh(script: """
+                echo "${curlOutput}" | grep 'SimpleWebApplication-1.0.0-.*\\.war' | head -1
+            """, returnStdout: true).trim()
+            
+            echo "LATEST_BUILD is: ${LATEST_BUILD}"
+
+            if (LATEST_BUILD) {
+                // Download the latest build from Nexus
+                sh """
+                    wget --user=admin --password=admin "${NEXUS_URL}${LATEST_BUILD}" -O /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication.war
+                """
+            } else {
+                error "No build found to download."
+            }
+        }
+        
+        // Start Tomcat
+        sh 'sudo systemctl start tomcat'
+    }
+}
+
 
   }
 }
