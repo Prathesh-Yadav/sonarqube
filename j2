@@ -78,7 +78,7 @@ pipeline {
         */
         sh '''
             NEXUS_URL="http://13.201.120.172:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/"
-            LATEST_BUILD=$(curl -s "$NEXUS_URL" | tail -4 | head -1 | grep SimpleWebApplication-1.0.0-*.*-*.war)
+            LATEST_BUILD=$(curl -s "$NEXUS_URL" | grep -oP 'SimpleWebApplication-1\.0\.0-[0-9\.]+-SNAPSHOT\.war$' | tail -1)
   
             wget --user=admin --password=admin http://13.201.120.172:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/$LATEST_BUILD -O /home/tomcat/apache-tomcat-10.1.30/webapps/$LATEST_BUILD
         '''
