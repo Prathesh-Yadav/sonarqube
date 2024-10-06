@@ -77,6 +77,7 @@ pipeline {
         sh 'sudo cp /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication*.war /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication_backup_$(date +"%Y%m%d%H%M%S").war || true'
         */
         sh '''
+                #!/bin/bash
                 NEXUS_URL="http://13.201.120.172:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/"
                 export LATEST_BUILD = curl -s "$NEXUS_URL" | tail -4 | head -1 | grep SimpleWebApplication-1.0.0-*.*-*.war
              
