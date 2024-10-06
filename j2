@@ -67,39 +67,31 @@ pipeline {
       }
     }
   
-stage('Deploy to Tomcat') {
+    stage('Deploy to Tomcat') {
     agent {
         label "Tomcat"
     }
     steps {
         sh 'sudo systemctl stop tomcat'
-        
-        // Use a script block to run Groovy code and shell commands
-        script {
-            def NEXUS_URL = "http://13.201.120.172:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/"
-            
-            // Debug: Print the content fetched from the URL
-            def curlOutput = sh(script: "curl -s \"$NEXUS_URL\"", returnStdout: true).trim()
-            echo "Curl Output:\n${curlOutput}"
-            
-            // Extract the latest build name
-            def LATEST_BUILD = sh(script: """
-                echo "${curlOutput}" | grep 'SimpleWebApplication-1.0.0-.*\\.war' | head -1
-            """, returnStdout: true).trim()
-            
-            echo "LATEST_BUILD is: ${LATEST_BUILD}"
 
-            if (LATEST_BUILD) {
-                // Download the latest build from Nexus
-                sh """
-                    wget --user=admin --password=admin "${NEXUS_URL}${LATEST_BUILD}" -O /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication.war
-                """
-            } else {
-                error "No build found to download."
-            }
+        // Define the Nexus repository URL
+        def NEXUS_URL = "http://13.201.120.172:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/"
+
+        // Fetch the HTML content of the directory and extract the latest WAR file
+        def LATEST_BUILD = sh(script: """
+            curl -s "${NEXUS_URL}" | grep -oP 'href="\\K[^"]*SimpleWebApplication-1.0.0-.*?\\.war' | sort -V | tail -1
+        """, returnStdout: true).trim()
+
+        // Check if LATEST_BUILD is not empty before proceeding
+        if (LATEST_BUILD) {
+            echo "LATEST_BUILD is: ${LATEST_BUILD}"
+            sh """
+                wget --user=admin --password=admin "${NEXUS_URL}${LATEST_BUILD}" -O /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication-1.0.0-*.war
+            """
+        } else {
+            error("No build found to download.")
         }
-        
-        // Start Tomcat
+
         sh 'sudo systemctl start tomcat'
     }
 }
