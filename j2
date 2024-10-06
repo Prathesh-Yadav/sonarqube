@@ -77,10 +77,19 @@ pipeline {
         sh 'sudo cp /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication*.war /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication_backup_$(date +"%Y%m%d%H%M%S").war || true'
         */
         sh '''
-          NEXUS_URL="http://13.201.120.172:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/"
-          LATEST_BUILD=$(curl -s "$NEXUS_URL" | grep -oE 'SimpleWebApplication-1\.0\.0-[0-9\.]+-SNAPSHOT\.war$' | tail -1)
-    
-          wget --user=admin --password=admin http://13.201.120.172:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/$LATEST_BUILD -O /home/tomcat/apache-tomcat-10.1.30/webapps/$LATEST_BUILD
+          # Fetch the page from Nexus and find the latest WAR file
+            NEXUS_URL=http://13.201.120.172:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/
+            LATEST_BUILD=$(curl -s $NEXUS_URL | grep -o 'SimpleWebApplication-1.0.0-.*\.war' | head -1)
+            
+            # Print the result for debugging
+            echo "LATEST_BUILD: $LATEST_BUILD"
+            
+            # Exit if no build is found
+            if [ -z "$LATEST_BUILD" ]; then
+              echo "No build found!"
+              exit 1
+            fi
+            //wget --user=admin --password=admin http://13.201.120.172:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/$LATEST_BUILD -O /home/tomcat/apache-tomcat-10.1.30/webapps/$LATEST_BUILD
         '''
         
         sh 'sudo systemctl start tomcat'
