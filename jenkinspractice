@@ -57,7 +57,7 @@ pipeline {
           ]], 
           credentialsId: 'nexus-ssh', 
           groupId: 'com.maven', 
-          nexusUrl: '52.66.111.80:8081', 
+          nexusUrl: '13.201.120.172:8081/', 
           nexusVersion: 'nexus3', 
           protocol: 'http', 
           repository: 'maven-snapshots', 
@@ -76,9 +76,10 @@ pipeline {
         sh 'sudo cp /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication*.war /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication_backup_$(date +"%Y%m%d%H%M%S").war || true'
         */
         sh '''
-      curl -s http://52.66.111.80:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT
-      LATEST_WAR=$(ls | tail -4 | head -1 | grep SimpleWebApplication-*.war)
-      wget --user=admin --password=admin http://52.66.111.80:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/$LATEST_WAR -O /home/tomcat/apache-tomcat-10.1.30/webapps/$LATEST_WAR
+                NEXUS_URL="http://13.201.120.172:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/"
+                LATEST_BUILD=\$(curl -s "\$NEXUS_URL" | xmllint --html --xpath '(//table/tr)[last()-1]/td[2]/text()[contains(., "SimpleWebApplication-")]')
+                echo "Latest build: \$LATEST_BUILD"
+      wget --user=admin --password=admin http://13.201.120.172:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/$LATEST_BUILD -O /home/tomcat/apache-tomcat-10.1.30/webapps/$LATEST_BUILD
     '''
         
         sh 'sudo systemctl start tomcat'
