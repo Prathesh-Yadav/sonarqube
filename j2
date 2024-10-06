@@ -86,7 +86,7 @@ pipeline {
           wget --user=admin --password=admin http://13.201.120.172:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/"$LATEST_BUILD" -O /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication-1.0.0-*.*-*.war
                   
       
-    '''
+        '''
         
         sh 'sudo systemctl start tomcat'
       }
