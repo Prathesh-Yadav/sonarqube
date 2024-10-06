@@ -76,16 +76,28 @@ pipeline {
         /*
         sh 'sudo cp /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication*.war /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication_backup_$(date +"%Y%m%d%H%M%S").war || true'
         */
-        sh '''
-                  
+        
         def NEXUS_URL = "http://13.201.120.172:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/"
-        def LATEST_BUILD = sh(script: "curl -s ${NEXUS_URL} | grep -o 'SimpleWebApplication-1.0.0-.*\\\\.war' | head -1", returnStdout: true).trim()
         
-        echo "LATEST_BUILD: ${LATEST_BUILD}"
         
-        if (LATEST_BUILD == null || LATEST_BUILD.isEmpty()) {
-            error "No build found!"
-        }
+        sh """
+            sudo systemctl stop tomcat
+            
+            # Fetch the latest build from Nexus using the defined URL
+            LATEST_BUILD=\$(curl -s ${NEXUS_URL} | grep -o 'SimpleWebApplication-1.0.0-.*\\\\.war' | head -1)
+            
+            echo "Latest build: \$LATEST_BUILD"
+            
+            if [ -z "\$LATEST_BUILD" ]; then
+                echo "No build found!"
+                exit 1
+            fi
+            
+            # Deploy the build (this is an example, adjust based on your deployment process)
+            sudo cp /path/to/\$LATEST_BUILD /path/to/tomcat/webapps/
+            sudo systemctl start tomcat
+        """
+
 
             wget --user=admin --password=admin http://13.201.120.172:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/$LATEST_BUILD -O /home/tomcat/apache-tomcat-10.1.30/webapps/$LATEST_BUILD
         '''
