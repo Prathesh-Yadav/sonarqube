@@ -70,22 +70,22 @@ pipeline {
         )
       }
     }
-  
+  /*
   stage('Send build artifacts over SSH) { 
       steps{
 	sshPublisher(publishers: [sshPublisherDesc(config Name: 'Tomcat_Deploy", transfers: [sshTransfer(cleanRemote: false, excludes:", execCommand: ", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: 'L.]+*, remoteDirectory: 'apache-tomcat-10.1.30/webapps', remoteDirectorySDF: false, removePrefix: ", sourceFiles: SimpleWebApplication.war')], usePromotionTimestamp: false, use WorkspacelnPromotion: false, verbose: false)
     }
   }
-
+*/
     stage('Deploy to Tomcat') {
       agent {
         label "Tomcat"
       }
       steps {
         sh 'sudo systemctl stop tomcat'
-      
+      /*
         sh 'sudo cp /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication*.war /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication_backup_$(date +"%Y%m%d%H%M%S").war || true'
-        
+        */
         sh '''
                 #!/bin/bash
                NEXUS_URL="http://13.201.120.172:8081/repository/maven-releases-javawebapp/http://13.201.120.172:8081/repository/maven-releases-javawebapp/com/maven/SimpleWebApplication/1.0.0/SimpleWebApplication-1.0.0.war"
