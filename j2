@@ -50,7 +50,7 @@ pipeline {
         }
       }
     }
-    /*
+    
     stage('Upload to Nexus') {
       steps {
         nexusArtifactUploader(
@@ -70,13 +70,13 @@ pipeline {
         )
       }
     }
-  */
+  
   stage('Send build artifacts over SSH) { 
       steps{
 	sshPublisher(publishers: [sshPublisherDesc(config Name: 'Tomcat_Deploy", transfers: [sshTransfer(cleanRemote: false, excludes:", execCommand: ", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: 'L.]+*, remoteDirectory: 'apache-tomcat-10.1.30/webapps', remoteDirectorySDF: false, removePrefix: ", sourceFiles: SimpleWebApplication.war')], usePromotionTimestamp: false, use WorkspacelnPromotion: false, verbose: false)
     }
   }
-/*
+
     stage('Deploy to Tomcat') {
       agent {
         label "Tomcat"
@@ -99,7 +99,7 @@ pipeline {
         sh 'sudo systemctl start tomcat'
       }
     }
-  */
+  
   }
 }
 post {
