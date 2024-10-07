@@ -17,7 +17,7 @@ pipeline {
   stage('List Workspace') {
     steps {
         script {
-            sh 'cd target | ls -la'
+            sh 'ls  -la target'
         }
     }
 }
