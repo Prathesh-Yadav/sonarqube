@@ -1,24 +1,24 @@
 pipeline {
   agent {
-    label "java"
+    label "Java"
   }
   
   environment {
-    EMAIL_RECIPIENTS = 'pramodprasanna17@gmail.com'
+    EMAIL_RECIPIENTS = 'pratheshyadav67@gmail.com'
     PATH = "/opt/apache-maven-3.9.2/bin:${PATH}"
-    NEXUS_URL = 'http://54.92.208.105:8081/repository/snapshotnew/'
-    NEXUS_CREDENTIALS = credentials('jenkins-nexus') // Jenkins credentials for Nexus
+    NEXUS_URL = 'http://13.201.0.144:8081/repository/snapshotnew/'
+    NEXUS_CREDENTIALS = credentials('nexus-ssh') // Jenkins credentials for Nexus
     GROUP_ID = 'com.maven'
     ARTIFACT_ID = 'SimpleWebApplication'
     VERSION = '9.1.14-SNAPSHOT'
     WAR_FILE_NAME = "SimpleWebApplication.war"
     //WAR_FILE_NAME = "${ARTIFACT_ID}-${VERSION}.war"
-    TOMCAT_CREDENTIALS = credentials('tomcat-password')
-    TOMCAT_URL = 'http://54.224.220.179:8080/'
-    TOMCAT_WEBAPPS_DIR = '/opt/tomcat/apache-tomcat-10.1.30/webapps' // Define your Tomcat webapps directory here
-    WORKSPACE = '/home/tomcat/workspace/Javawebappproject'
+    TOMCAT_CREDENTIALS = credentials('tomcat_server')
+    TOMCAT_URL = 'http://43.204.147.117:8080/'
+    TOMCAT_WEBAPPS_DIR = '/home/tomcat/apache-tomcat-10.1.30/webapps' // Define your Tomcat webapps directory here
+    WORKSPACE = '/home/tomcat/jenkins/workspace/Assignment_2'
     NEXUSUSER_NAME = 'admin'
-    NEXUS_PASSWORD = 'admin12'
+    NEXUS_PASSWORD = 'admin'
   }
   
   stages {
@@ -74,7 +74,7 @@ pipeline {
         ]], 
         credentialsId: 'jenkins-nexus', 
         groupId: 'com.maven', 
-        nexusUrl: '54.92.208.105:8081', // Ensure protocol is included
+        nexusUrl: '13.201.0.144:8081', // Ensure protocol is included
         nexusVersion: 'nexus3', 
         protocol: 'http', 
         repository: 'snapshotnew', 
@@ -84,7 +84,7 @@ pipeline {
     
     stage('Deploy WAR from Nexus to Tomcat') {
       agent {
-        label "tomcat"
+        label "Tomcat"
       }
       steps {
         script {
@@ -101,7 +101,7 @@ stage('Deploy WAR to Tomcat') {
               label "tomcat"
                 }
            steps {
-               withCredentials([usernamePassword(credentialsId: 'tomcat-password', usernameVariable: 'hostmanager', passwordVariable: 'hostmanager1')]) {
+              // withCredentials([usernamePassword(credentialsId: 'tomcat_server', usernameVariable: 'hostmanager', passwordVariable: 'hostmanager1')]) {
                    script {
                        // Deploy the WAR file to Tomcat using Tomcat Manager API
                        sh """
@@ -109,7 +109,7 @@ stage('Deploy WAR to Tomcat') {
                       // mv ${TOMCAT_WEBAPPS_DIR}/*.war /home/
                        cp ${WAR_FILE_NAME} ${TOMCAT_WEBAPPS_DIR}
                        sudo systemctl start tomcat
-                       #curl -u hostmanager:hostmanager1 --upload-file ${WAR_FILE_NAME} ${TOMCAT_URL}=/.&update=true
+                     //  #curl -u hostmanager:hostmanager1 --upload-file ${WAR_FILE_NAME} ${TOMCAT_URL}=/.&update=true
                        """
                    }
                }
