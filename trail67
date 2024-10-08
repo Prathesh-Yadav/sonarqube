@@ -96,7 +96,7 @@ pipeline {
 }
 }
 }
-/*
+
 stage('Deploy WAR to Tomcat') {
           agent {
               label "Tomcat"
@@ -106,21 +106,15 @@ stage('Deploy WAR to Tomcat') {
                    script {
                        // Deploy the WAR file to Tomcat using Tomcat Manager API
                        sh """
-                       
                        sudo systemctl stop tomcat
-                       pwd
-                       ls -al
-                       cp -r ${Latest} ${TOMCAT_WEBAPPS_DIR}
-                       pwd
-                       ls -al
+                       cp SimpleWebApplication-9.1.14.war /home/tomcat/apache-tomcat-9.0.96/webapps
                        sudo systemctl start tomcat
-                       ls -al ${TOMCAT_WEBAPPS_DIR}
                        #curl -u hostmanager:hostmanager1 --upload-file ${WAR_FILE_NAME} ${TOMCAT_URL}=/.&update=true
                        """
                    }
                }
            }
-*/
+
        }
       }
 
