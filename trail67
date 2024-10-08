@@ -111,7 +111,7 @@ stage('Deploy WAR to Tomcat') {
                        ls -al
                        cp ${WAR_FILE_NAME} ${TOMCAT_WEBAPPS_DIR}
                        sudo systemctl start tomcat
-                       ls -al ${TOMCAT_URl}
+                       ls -al ${TOMCAT_WEBAPPS_DIR}
                        #curl -u hostmanager:hostmanager1 --upload-file ${WAR_FILE_NAME} ${TOMCAT_URL}=/.&update=true
                        """
                    }
