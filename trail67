@@ -90,12 +90,13 @@ pipeline {
         script {
           // Download the WAR from Nexus
           sh """
-          Latest = curl -u admin:admin -O http://13.201.0.144:8081/repository/snapshotnew/com/maven/SimpleWebApplication/9.1.14/SimpleWebApplication-9.1.14.war
+          curl -u admin:admin -O http://13.201.0.144:8081/repository/snapshotnew/com/maven/SimpleWebApplication/9.1.14/SimpleWebApplication-9.1.14.war
+          pwd
           """
 }
 }
 }
-
+/*
 stage('Deploy WAR to Tomcat') {
           agent {
               label "Tomcat"
@@ -119,7 +120,7 @@ stage('Deploy WAR to Tomcat') {
                    }
                }
            }
-
+*/
        }
       }
 
