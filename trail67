@@ -15,7 +15,7 @@ pipeline {
     //WAR_FILE_NAME = "${ARTIFACT_ID}-${VERSION}.war"
     TOMCAT_CREDENTIALS = credentials('tomcat_server')
     TOMCAT_URL = 'http://43.204.147.117:8080/'
-    TOMCAT_WEBAPPS_DIR = '/home/tomcat/apache-tomcat-10.1.30/webapps' // Define your Tomcat webapps directory here
+    TOMCAT_WEBAPPS_DIR = '/home/tomcat/apache-tomcat-9.0.96/webapps' // Define your Tomcat webapps directory here
     WORKSPACE = '/home/tomcat/jenkins/workspace/Assignment_2'
     NEXUSUSER_NAME = 'admin'
     NEXUS_PASSWORD = 'admin'
@@ -109,7 +109,7 @@ stage('Deploy WAR to Tomcat') {
                        sudo systemctl stop tomcat
                        pwd
                        ls -al
-                       cp -r ${WAR_FILE_NAME} ${TOMCAT_WEBAPPS_DIR}
+                       cp ${WAR_FILE_NAME} ${TOMCAT_WEBAPPS_DIR}
                        sudo systemctl start tomcat
                        #curl -u hostmanager:hostmanager1 --upload-file ${WAR_FILE_NAME} ${TOMCAT_URL}=/.&update=true
                        """
