@@ -108,7 +108,7 @@ stage('Deploy WAR to Tomcat') {
                        sh """
                        sudo systemctl stop tomcat
                        pwd
-                       cd ${WORKSPACE}/${TOMCAT_WEBAPPS_DIR}
+                       cd /home/tomcat/jenkins/workspace/Assignment_2 /home/tomcat/apache-tomcat-9.0.96/webapps
                        pwd
                        #declare Latest_file=$(ls . | grep "SimpleWebApplication-*")
                        #echo $Latest_file
