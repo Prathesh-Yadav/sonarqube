@@ -105,10 +105,10 @@ stage('Deploy WAR to Tomcat') {
                    script {
                        // Deploy the WAR file to Tomcat using Tomcat Manager API
                        sh """
-                       sudo systemctl stop tomcat
-                     /*  mv ${TOMCAT_WEBAPPS_DIR}/*.war /home/tomcat/apache-tomcat-10.1.30/webapps  */
+                       
+                     
                        cp -r ${WAR_FILE_NAME} ${TOMCAT_WEBAPPS_DIR}
-                       sudo systemctl start tomcat
+                       ls -al ${TOMCAT_WEBAPPS_DIR}
                      //  #curl -u hostmanager:hostmanager1 --upload-file ${WAR_FILE_NAME} ${TOMCAT_URL}=/.&update=true
                        """
                    }
