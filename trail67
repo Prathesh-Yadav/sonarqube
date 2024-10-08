@@ -72,7 +72,7 @@ pipeline {
           file: 'target/SimpleWebApplication.war', 
           type: 'war'
         ]], 
-        credentialsId: 'jenkins-nexus', 
+        credentialsId: 'nexus-ssh', 
         groupId: 'com.maven', 
         nexusUrl: '13.201.0.144:8081', // Ensure protocol is included
         nexusVersion: 'nexus3', 
