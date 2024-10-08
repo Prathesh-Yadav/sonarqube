@@ -90,7 +90,7 @@ pipeline {
         script {
           // Download the WAR from Nexus
           sh """
-          curl -u ${NEXUSUSER_NAME}:${NEXUS_PASSWORD} -O ${NEXUS_URL}${WAR_FILE_NAME}
+          Latest = curl -u (admin:admin -O http://13.201.0.144:8081/repository/snapshotnew/com/maven/SimpleWebApplication-9.1.14.war)
           """
 }
 }
@@ -109,7 +109,7 @@ stage('Deploy WAR to Tomcat') {
                        sudo systemctl stop tomcat
                        pwd
                        ls -al
-                       cp -r ${WAR_FILE_NAME} ${TOMCAT_WEBAPPS_DIR}
+                       cp -r ${Latest} ${TOMCAT_WEBAPPS_DIR}
                        pwd
                        ls -al
                        sudo systemctl start tomcat
