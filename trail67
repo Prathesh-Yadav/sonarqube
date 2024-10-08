@@ -107,9 +107,8 @@ stage('Deploy WAR to Tomcat') {
                        sh """
                        
                        sudo systemctl stop tomcat
-                       sudo systemctl status tomcat
-                        pwd
-                        ls -al
+                       pwd
+                       ls -al
                        cp -r ${WAR_FILE_NAME} ${TOMCAT_WEBAPPS_DIR}
                        sudo systemctl start tomcat
                        sudo systemctl status tomcat
