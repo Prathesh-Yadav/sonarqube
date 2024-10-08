@@ -107,8 +107,15 @@ stage('Deploy WAR to Tomcat') {
                        // Deploy the WAR file to Tomcat using Tomcat Manager API
                        sh """
                        sudo systemctl stop tomcat
-                       cp SimpleWebApplication-9.1.14.war /home/tomcat/apache-tomcat-9.0.96/webapps
-                       sudo systemctl start tomcat
+                       pwd
+                       cd ${WORKSPACE} ${TOMCAT_WEBAPPS_DIR}
+                       pwd
+                       #declare Latest_file=$(ls . | grep "SimpleWebApplication-*")
+                       #echo $Latest_file
+                       #mv $Latest_file /home/tomcat/apache-tomcat-9.0.96/webapps/backup/
+                       #cd ${TOMCAT_WEBAPPS_DIR} ${WORKSPACE}
+                       #cp SimpleWebApplication-9.1.14.war /home/tomcat/apache-tomcat-9.0.96/webapps
+                       #sudo systemctl start tomcat
                        #curl -u hostmanager:hostmanager1 --upload-file ${WAR_FILE_NAME} ${TOMCAT_URL}=/.&update=true
                        """
                    }
