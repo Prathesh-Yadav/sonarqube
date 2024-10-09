@@ -116,7 +116,7 @@ stage('Deploy WAR to Tomcat') {
                             returnStdout: true).trim()
                         echo "Latest file: ${Latest_file}"
                         if (Latest_file) {
-                            sh "mv ${TOMCAT_WEBAPPS_DIR}/${Latest_file} /home/tomcat/apache-tomcat-9.0.96/webapps/backup/"
+                            sh "mv ${Latest_file} /home/tomcat/apache-tomcat-9.0.96/webapps/backup/"
                         } else {
                             echo "No files found matching the pattern."
                         }
