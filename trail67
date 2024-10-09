@@ -121,7 +121,7 @@ stage('Deploy WAR to Tomcat') {
                     sh 'ls -al'
                     if (Latest_file) {
                             echo "Found latest WAR file: ${Latest_file}. Moving to backup."
-                            sh "mv ${TOMCAT_WEBAPPS_DIR}/${Latest_file} ${TOMCAT_WEBAPPS_DIR}/backup/"
+                            sh "mv ${Latest_file} ${TOMCAT_WEBAPPS_DIR}/backup/"
                             sh 'pwd'
                             sh 'ls -al'
                         }
