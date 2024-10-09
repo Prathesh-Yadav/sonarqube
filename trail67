@@ -107,7 +107,9 @@ stage('Deploy WAR to Tomcat') {
                     sh """
                        sudo systemctl stop tomcat
                        pwd
+                       ls -al
                        cd ${TOMCAT_WEBAPPS_DIR}
+                       ls -al
                     """
                        def Latest_file = sh(
                             script: "ls -t SimpleWebApplication-* 2>/dev/null | head -n 1",
