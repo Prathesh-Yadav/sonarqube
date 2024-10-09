@@ -114,7 +114,8 @@ stage('Deploy WAR to Tomcat') {
                             script: "ls -al | grep 'SimpleWebApplication-*'",
                             returnStdout: true).trim()
                         echo "Latest file: ${Latest_file}"
-                      pwd
+                      sh'pwd'
+                      shl's -al'
                       
 
                        
