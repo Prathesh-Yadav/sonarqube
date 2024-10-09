@@ -90,7 +90,8 @@ pipeline {
         script {
           // Download the WAR from Nexus
           sh """
-          curl -u ${NEXUSUSER_NAME}:${NEXUS_PASSWORD} -O ${NEXUS_URL}${WAR_FILE_NAME}
+          curl -u admin:admin -O http://13.201.0.144:8081/repository/snapshotnew/com/maven/SimpleWebApplication/9.1.14/SimpleWebApplication-9.1.14.war
+          pwd
           """
 }
 }
@@ -103,22 +104,23 @@ stage('Deploy WAR to Tomcat') {
            steps {
               // withCredentials([usernamePassword(credentialsId: 'tomcat_server', usernameVariable: 'hostmanager', passwordVariable: 'hostmanager1')]) {
                    script {
-                       // Deploy the WAR file to Tomcat using Tomcat Manager API
-                       sh """
-                       
+                    sh """
                        sudo systemctl stop tomcat
                        pwd
-                       ls -al
-                       cp -r ${WAR_FILE_NAME} ${TOMCAT_WEBAPPS_DIR}
+                       cd /home/tomcat/jenkins/workspace/Assignment_2 /home/tomcat/apache-tomcat-9.0.96/webapps
                        pwd
-                       ls -al
-                       sudo systemctl start tomcat
-                       ls -al ${TOMCAT_WEBAPPS_DIR}
+                       #Latest_file=\$(ls -al | grep 'SimpleWebApplication-*')
+                       #echo $Latest_file
+                       #mv $Latest_file /home/tomcat/apache-tomcat-9.0.96/webapps/backup/
+                       #cd /home/tomcat/apache-tomcat-9.0.96/webapps /home/tomcat/jenkins/workspace/Assignment_2
+                       #cp SimpleWebApplication-9.1.14.war /home/tomcat/apache-tomcat-9.0.96/webapps
+                       #sudo systemctl start tomcat
                        #curl -u hostmanager:hostmanager1 --upload-file ${WAR_FILE_NAME} ${TOMCAT_URL}=/.&update=true
-                       """
+                    """
                    }
                }
            }
 
        }
       }
+
