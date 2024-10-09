@@ -106,11 +106,12 @@ stage('Deploy WAR to Tomcat') {
                    script {
                     sh """
                        pwd
+                       cp SimpleWebApplication-9.1.14.war /home/tomcat/apache-tomcat-9.0.96/webapps
                        cd ${TOMCAT_WEBAPPS_DIR}
                        pwd
                     """
                        def Latest_file = sh(
-                            script: "ls / | grep 'SimpleWebApplication-*'",
+                            script: "ls -al | grep 'SimpleWebApplication-*'",
                             returnStdout: true).trim()
                         echo "Latest file: ${Latest_file}"
 
