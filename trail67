@@ -115,7 +115,7 @@ stage('Deploy WAR to Tomcat') {
                             returnStdout: true).trim()
                         echo "Latest file: ${Latest_file}"
                       sh'pwd'
-                      shl's -al'
+                      sh 'ls -al'
                       
 
                        
