@@ -110,18 +110,18 @@ stage('Deploy WAR to Tomcat') {
                        cd ${TOMCAT_WEBAPPS_DIR}
                     """
                        def Latest_file = sh(
-                            script: "ls -t SimpleWebApplication-* | head -n 1",
+                            script: "ls -t SimpleWebApplication-* 2>/dev/null | head -n 1",
                             returnStdout: true).trim()
                         echo "Latest file: ${Latest_file}"
                         if (Latest_file) {
-                            sh "mv ${TOMCAT_WEBAPPS_DIR}/${Latest_file} /home/tomcat/apache-tomcat-9.0.96/webapps/backup/"
+                            sh "mv ${Latest_file} /home/tomcat/apache-tomcat-9.0.96/webapps/backup/"
                         } else {
                             echo "No files found matching the pattern."
                         }
                         sh 'cd /home/tomcat/jenkins/workspace/Assignment_2'
                         sh 'cp SimpleWebApplication-9.1.14.war /home/tomcat/apache-tomcat-9.0.96/webapps'
                         sh 'pwd'
-                        sudo systemctl start tomcat
+                        sh 'sudo systemctl start tomcat'
                    }
                }
            }
