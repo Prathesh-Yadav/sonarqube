@@ -115,7 +115,7 @@ stage('Deploy WAR to Tomcat') {
                             returnStdout: true).trim()
                         echo "Latest file: ${Latest_file}"
                       pwd
-                      #sh 'mv $Latest_file /home/tomcat/apache-tomcat-9.0.96/webapps/backup/'
+                      
 
                        
                     
