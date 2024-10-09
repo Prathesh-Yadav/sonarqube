@@ -109,7 +109,7 @@ stage('Deploy WAR to Tomcat') {
                        pwd
                        cd /home/tomcat/jenkins/workspace/Assignment_2 /home/tomcat/apache-tomcat-9.0.96/webapps
                        pwd
-                       #declare Latest_file=${ls . | grep "SimpleWebApplication-*"}
+                       #declare Latest_file=${ls -al | grep "SimpleWebApplication-*"}
                        #echo $Latest_file
                        #mv $Latest_file /home/tomcat/apache-tomcat-9.0.96/webapps/backup/
                        #cd /home/tomcat/apache-tomcat-9.0.96/webapps /home/tomcat/jenkins/workspace/Assignment_2
