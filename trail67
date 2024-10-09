@@ -106,7 +106,7 @@ stage('Deploy WAR to Tomcat') {
                    script {
                     sh """
                        pwd
-                       cd /home/tomcat/jenkins/workspace/Assignment_2 /home/tomcat/apache-tomcat-9.0.96/webapps
+                       cd ${WORKSPACE} ${TOMCAT_WEBAPPS_DIR}
                        pwd
                        #curl -u hostmanager:hostmanager1 --upload-file ${WAR_FILE_NAME} ${TOMCAT_URL}=/.&update=true
                     """
