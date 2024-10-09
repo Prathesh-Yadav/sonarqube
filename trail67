@@ -105,10 +105,9 @@ stage('Deploy WAR to Tomcat') {
               // withCredentials([usernamePassword(credentialsId: 'tomcat_server', usernameVariable: 'hostmanager', passwordVariable: 'hostmanager1')]) {
                    script {
                     sh """
+                       sudo systemctl stop tomcat
                        pwd
-                       cp SimpleWebApplication-9.1.14.war /home/tomcat/apache-tomcat-9.0.96/webapps
                        cd ${TOMCAT_WEBAPPS_DIR}
-                       pwd
                     """
                        def Latest_file = sh(
                             script: "ls -t SimpleWebApplication-* | head -n 1",
@@ -119,13 +118,10 @@ stage('Deploy WAR to Tomcat') {
                         } else {
                             echo "No files found matching the pattern."
                         }
-                        
+                        sh 'cd /home/tomcat/jenkins/workspace/Assignment_2'
+                        cp SimpleWebApplication-9.1.14.war /home/tomcat/apache-tomcat-9.0.96/webapps
                         sh 'pwd'
-                        
-                      
-
-                       
-                    
+                        sudo systemctl start tomcat
                    }
                }
            }
