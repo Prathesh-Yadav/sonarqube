@@ -106,15 +106,15 @@ stage('Deploy WAR to Tomcat') {
                    script {
                     sh """
                        sudo systemctl stop tomcat
-                       #pwd
-                       #cd /home/tomcat/jenkins/workspace/Assignment_2 /home/tomcat/apache-tomcat-9.0.96/webapps
-                       #pwd
-                       #declare Latest_file=$(ls . | grep "SimpleWebApplication-*")
+                       pwd
+                       cd /home/tomcat/jenkins/workspace/Assignment_2 /home/tomcat/apache-tomcat-9.0.96/webapps
+                       pwd
+                       #declare Latest_file=${ls . | grep "SimpleWebApplication-*"}
                        #echo $Latest_file
                        #mv $Latest_file /home/tomcat/apache-tomcat-9.0.96/webapps/backup/
                        #cd /home/tomcat/apache-tomcat-9.0.96/webapps /home/tomcat/jenkins/workspace/Assignment_2
-                       cp SimpleWebApplication-9.1.14.war /home/tomcat/apache-tomcat-9.0.96/webapps
-                       sudo systemctl start tomcat
+                       #cp SimpleWebApplication-9.1.14.war /home/tomcat/apache-tomcat-9.0.96/webapps
+                       #sudo systemctl start tomcat
                        #curl -u hostmanager:hostmanager1 --upload-file ${WAR_FILE_NAME} ${TOMCAT_URL}=/.&update=true
                     """
                    }
