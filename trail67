@@ -106,11 +106,11 @@ stage('Deploy WAR to Tomcat') {
                    script {
                     sh """
                        sudo systemctl stop tomcat
+                       ls -al
                        pwd
-                       ls -al
-                       cd ${TOMCAT_WEBAPPS_DIR}
-                       ls -al
                     """
+                       sh 'cd ${TOMCAT_WEBAPPS_DIR}'
+                       sh 'ls -al'
                        def Latest_file = sh(
                             script: "ls -t SimpleWebApplication-* 2>/dev/null | head -n 1",
                             returnStdout: true).trim()
