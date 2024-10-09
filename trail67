@@ -114,7 +114,7 @@ stage('Deploy WAR to Tomcat') {
                             script: "ls | grep 'SimpleWebApplication-*'",
                             returnStdout: true).trim()
                         echo "Latest file: ${Latest_file}"
-                        sh 'mv ${Latest_file} /home/tomcat/apache-tomcat-9.0.96/webapps/backup/'
+                        sh 'mv ${TOMCAT_WEBAPPS_DIR}/${Latest_file} /home/tomcat/apache-tomcat-9.0.96/webapps/backup/'
                         sh 'pwd'
                         
                       
