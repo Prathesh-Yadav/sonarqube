@@ -111,10 +111,15 @@ stage('Deploy WAR to Tomcat') {
                        pwd
                     """
                        def Latest_file = sh(
-                            script: "ls | grep 'SimpleWebApplication-*'",
+                            script: "ls -t SimpleWebApplication-* | head -n 1",
                             returnStdout: true).trim()
                         echo "Latest file: ${Latest_file}"
-                        sh "mv ${TOMCAT_WEBAPPS_DIR}/${Latest_file} /home/tomcat/apache-tomcat-9.0.96/webapps/backup/"
+                        if (Latest_file) {
+                            sh "mv ${TOMCAT_WEBAPPS_DIR}/${Latest_file} /home/tomcat/apache-tomcat-9.0.96/webapps/backup/"
+                        } else {
+                            echo "No files found matching the pattern."
+                        }
+                        
                         sh 'pwd'
                         
                       
