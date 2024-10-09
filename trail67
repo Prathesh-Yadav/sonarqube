@@ -108,6 +108,7 @@ stage('Deploy WAR to Tomcat') {
                        pwd
                        cd ${TOMCAT_WEBAPPS_DIR}
                        pwd
+                       Latest_file=\$(ls -al | grep 'SimpleWebApplication-*')
                        #curl -u hostmanager:hostmanager1 --upload-file ${WAR_FILE_NAME} ${TOMCAT_URL}=/.&update=true
                     """
                    }
