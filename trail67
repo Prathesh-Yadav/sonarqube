@@ -104,7 +104,7 @@ stage('Deploy WAR to Tomcat') {
            steps {
               // withCredentials([usernamePassword(credentialsId: 'tomcat_server', usernameVariable: 'hostmanager', passwordVariable: 'hostmanager1')]) {
                    script {
-                       sh """
+                    sh """
                        sudo systemctl stop tomcat
                        pwd
                        cd /home/tomcat/jenkins/workspace/Assignment_2 /home/tomcat/apache-tomcat-9.0.96/webapps
@@ -116,7 +116,7 @@ stage('Deploy WAR to Tomcat') {
                        #cp SimpleWebApplication-9.1.14.war /home/tomcat/apache-tomcat-9.0.96/webapps
                        #sudo systemctl start tomcat
                        #curl -u hostmanager:hostmanager1 --upload-file ${WAR_FILE_NAME} ${TOMCAT_URL}=/.&update=true
-                       """
+                    """
                    }
                }
            }
