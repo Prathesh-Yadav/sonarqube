@@ -119,7 +119,7 @@ stage('Deploy WAR to Tomcat') {
                             echo "No files found matching the pattern."
                         }
                         sh 'cd /home/tomcat/jenkins/workspace/Assignment_2'
-                        cp SimpleWebApplication-9.1.14.war /home/tomcat/apache-tomcat-9.0.96/webapps
+                        sh 'cp SimpleWebApplication-9.1.14.war /home/tomcat/apache-tomcat-9.0.96/webapps'
                         sh 'pwd'
                         sudo systemctl start tomcat
                    }
