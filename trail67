@@ -104,7 +104,6 @@ stage('Deploy WAR to Tomcat') {
            steps {
               // withCredentials([usernamePassword(credentialsId: 'tomcat_server', usernameVariable: 'hostmanager', passwordVariable: 'hostmanager1')]) {
                    script {
-                       // Deploy the WAR file to Tomcat using Tomcat Manager API
                        sh """
                        sudo systemctl stop tomcat
                        pwd
