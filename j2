@@ -89,6 +89,16 @@ pipeline {
                 }
          }
      }
+     stage('Download Latest WAR from Nexus') {
+    agent {
+        label "ansible"
+    }
+    steps {
+	script {
+ 	  	pwd
+           }
+        }
+     }
   }
 }
 
