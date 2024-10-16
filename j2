@@ -65,7 +65,7 @@ pipeline {
         )
       }
     }
-  stage('Download Latest WAR from Nexus') {
+  stage('Download Latest WAR from Nexus to tomcat1 server') {
     agent {
         label "Tomcat1"
     }
@@ -89,7 +89,7 @@ pipeline {
                 }
          }
      }
-     stage('Download Latest WAR from Nexus') {
+     stage('Taking backup') {
     agent {
         label "ansible"
     }
