@@ -78,36 +78,44 @@ pipeline {
     }
     steps {
         script {
-	    // Download maven-metadata.xml from Nexus
-	    sh """
-	    curl -u admin:admin -O http://13.233.197.98:8081/repository/snapshotnew/com/maven/SimpleWebApplication/maven-metadata.xml
-	    """
-	
-	    // Extract the latest timestamp and build number using shell commands
-	    def timestamp = sh(script: "cat maven-metadata.xml | grep '<timestamp>' | head -n 1 | sed 's/.*<timestamp>\\(.*\\)<\\/timestamp>/\\1/'", returnStdout: true).trim()
-	    def buildNumber = sh(script: "cat maven-metadata.xml | grep '<buildNumber>' | head -n 1 | sed 's/.*<buildNumber>\\(.*\\)<\\/buildNumber>/\\1/'", returnStdout: true).trim()
-	
-	    // Debug output to verify values
-	    echo "Timestamp: ${timestamp}"
-	    echo "Build Number: ${buildNumber}"
-	
-	    // Check if the values are extracted correctly
-	    if (timestamp.isEmpty() || buildNumber.isEmpty()) {
-	        error "Failed to retrieve timestamp or build number from maven-metadata.xml"
-	    }
-	
-	    // Construct the URL of the latest artifact
-	    def latestArtifactUrl = "http://13.233.197.98:8081/repository/snapshotnew/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/SimpleWebApplication-1.0.0-${timestamp}-${buildNumber}.war"
-	    echo "Latest artifact URL: ${latestArtifactUrl}"
-	
-	    // Download the latest WAR file
-	    sh "curl -u admin:admin -O ${latestArtifactUrl}"
-	
-	    // Move the downloaded WAR file to Tomcat's webapps directory
-	    sh """
-	    mv SimpleWebApplication-1.0.0-${timestamp}-${buildNumber}.war /home/tomcat1/apache-tomcat-10.1.31/webapps/
-	    """
-	}
+            // Download maven-metadata.xml from Nexus
+            sh """
+            curl -u admin:admin -O http://13.233.197.98:8081/repository/snapshotnew/com/maven/SimpleWebApplication/maven-metadata.xml
+            """
+            
+            // Print the content of the maven-metadata.xml for debugging
+            echo "Contents of maven-metadata.xml:"
+            sh "cat maven-metadata.xml"
+
+            // Extract the latest version value directly using sed
+            def artifactVersion = sh(script: "cat maven-metadata.xml | grep '<value>' | head -n 1 | sed 's/.*<value>\\(.*\\)<\\/value>/\\1/'", returnStdout: true).trim()
+
+            // Debug output to verify the artifact version value
+            echo "Latest Artifact Version: ${artifactVersion}"
+
+            // Check if the value is extracted correctly
+            if (artifactVersion.isEmpty()) {
+                error "Failed to retrieve artifact version from maven-metadata.xml"
+            }
+
+            // Construct the URL of the latest artifact using the extracted version
+            def latestArtifactUrl = "http://13.233.197.98:8081/repository/snapshotnew/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/${artifactVersion}.war"
+            echo "Latest artifact URL: ${latestArtifactUrl}"
+
+            // Download the latest WAR file
+            def downloadStatus = sh(script: "curl -u admin:admin -O ${latestArtifactUrl}", returnStatus: true)
+
+            if (downloadStatus != 0) {
+                error "Failed to download WAR file from Nexus"
+            }
+
+            // Move the downloaded WAR file to Tomcat's webapps directory
+            if (fileExists(artifactVersion + ".war")) {
+                echo "Moving WAR file to Tomcat's webapps directory"
+                sh "mv ${artifactVersion}.war /home/tomcat1/apache-tomcat-10.1.31/webapps/"
+            } else {
+                error "WAR file ${artifactVersion}.war does not exist after download"
+            }
 
     }
 }
