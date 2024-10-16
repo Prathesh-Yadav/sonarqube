@@ -84,7 +84,7 @@ pipeline {
 		    pwd
 		    ls -al
       		    """
-      		    value=$(grep '<value>' maven-metadata.xml | sed -e 's/.*<value>\(.*\)<\/value>/\1/')
+      		    def value = sh(script: "grep '<value>' maven-metadata.xml | sed -e 's/.*<value>\\(.*\\)<\\/value>/\\1/'", returnStdout: true).trim()
         	    echo "Latest Artifact Version: $value"
 
          
