@@ -83,9 +83,10 @@ pipeline {
                     curl -u admin:admin -O http://13.233.197.98:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/maven-metadata.xml
 		    pwd
 		    ls -al
+      		    """
       		    value=$(grep '<value>' maven-metadata.xml | sed -e 's/.*<value>\(.*\)<\/value>/\1/')
         	    echo "Latest Artifact Version: $value"
-		    """
+
          
                 }
          }
