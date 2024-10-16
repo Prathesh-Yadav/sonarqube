@@ -1,4 +1,3 @@
-
 pipeline {
   agent {
     label "Java"
@@ -15,7 +14,6 @@ pipeline {
         jacoco()
       }
     }
-    
     stage('SonarQube analysis') {
       steps {
         script {
@@ -84,8 +82,7 @@ pipeline {
                 }
          }
      }
-     /*
-     stage('Taking backup and stop tomcat') {
+     stage('Launchthe application') {
     agent {
         label "ansible"
     }
@@ -97,33 +94,6 @@ pipeline {
            }
         }
      }
-     stage('Copying application to webapps folder') {
-    agent {
-        label "Tomcat1"
-    }
-    steps {
-	script {
- 		 sh """
-		    
-		    pwd
-		    """
-                    sh "cp SimpleWebApplication-${value}.war /home/tomcat1/apache-tomcat-10.1.31/webapps"
-		    }
-      		}
-	}
-stage('After moving the application to webapps start tomcat') {
-    agent {
-        label "ansible"
-    }
-    steps {
-	script {
- 	  	sh """
-                ansible-playbook /etc/ansible/playbook2.yml -i /etc/ansible/hosts
-            """
-           }
-        }
-     }
-     */
   }
 }
 
