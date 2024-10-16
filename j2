@@ -87,28 +87,7 @@ pipeline {
                     echo "Contents of maven-metadata.xml:"
                     sh "cat maven-metadata.xml"
                     
-                    // Extract the latest artifact version from the <value> tag
-                    def artifactValue = sh(script: "grep -oP '<value>\\K[^<]+' maven-metadata.xml", returnStdout: true).trim()
                     
-                    // Print the extracted value
-                    echo "Latest Artifact Version: ${artifactValue}"
-
-                    // Check if the value is retrieved correctly
-                    if (artifactValue.isEmpty()) {
-                        error "Failed to retrieve artifact value from maven-metadata.xml"
-                    }
-
-                    // Construct the URL for the latest artifact
-                    def latestArtifactUrl = "http://13.233.197.98:8081/repository/snapshotnew/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/SimpleWebApplication-${artifactValue}.war"
-                    echo "Latest artifact URL: ${latestArtifactUrl}"
-
-                    // Download the latest WAR file
-                    sh "curl -u admin:admin -O ${latestArtifactUrl}"
-
-                    // Move the downloaded WAR file to Tomcat's webapps directory
-                    sh """
-                    mv SimpleWebApplication-${artifactValue}.war /home/tomcat1/apache-tomcat-10.1.31/webapps/
-                    """
                 }
          }
      }
