@@ -81,7 +81,9 @@ pipeline {
                     // Download maven-metadata.xml from Nexus
                     sh """
                     curl -u admin:admin -O http://13.233.197.98:8081/repository/snapshotnew/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/maven-metadata.xml
-                    """
+                    pwd
+		    ls -al
+		    """
                     sh "cat maven-metadata.xml"           
                 }
          }
