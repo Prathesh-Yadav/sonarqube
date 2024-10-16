@@ -3,6 +3,7 @@ pipeline {
   agent {
     label "Java"
   }
+  def value
   stages {
     stage('Build') {
       steps {
