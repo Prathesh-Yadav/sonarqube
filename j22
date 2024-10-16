@@ -1,0 +1,123 @@
+
+pipeline {
+  agent {
+    label "Java"
+  }
+  environment {
+    EMAIL_RECIPIENTS = 'pratheshyadav67@gmail.com'
+    PATH = "/opt/apache-maven-3.9.2/bin:${PATH}"
+  }
+
+  stages {
+    stage('Build') {
+      steps {
+        sh 'mvn clean install'
+      }
+    }
+    
+    stage('jacoco') {
+      steps {
+        jacoco()
+      }
+    }
+    
+    stage('SonarQube analysis') {
+      steps {
+        script {
+          def scannerHome = tool 'scanner_sonar'
+          withSonarQubeEnv('jenkins-sonar') {
+            sh """
+              ${scannerHome}/bin/sonar-scanner \
+              -Dsonar.projectKey=javawebapp \
+              -Dsonar.projectName=javawebapp \
+              -Dsonar.projectVersion=1.0 \
+              -Dsonar.java.binaries='target/classes'
+            """
+          }
+        }
+      }
+    }
+    /*
+    stage("Sonar Quality Gate Check") {
+      steps {
+        timeout(time: 1, unit: 'HOURS') {
+          script {
+            def qualityGate = waitForQualityGate()
+            if (qualityGate.status != 'OK') {
+              error "Pipeline aborted due to quality gate failure: ${qualityGate.status}"
+            }
+          }
+        }
+      }
+    }
+    */
+    stage('Upload to Nexus') {
+      steps {
+        nexusArtifactUploader(
+          artifacts: [[
+            artifactId: 'SimpleWebApplication', 
+            classifier: '', 
+            file: 'target/SimpleWebApplication.war', 
+            type: 'war'
+          ]], 
+          credentialsId: 'nexus-ssh', 
+          groupId: 'com.maven', 
+          nexusUrl: '13.233.197.98:8081/', 
+          nexusVersion: 'nexus3', 
+          protocol: 'http', 
+          repository: 'maven-snapshots', 
+          version: '1.0.0-SNAPSHOT'
+        )
+      }
+    }
+  /*
+  stage('Send build artifacts over SSH) { 
+      steps{
+	sshPublisher(publishers: [sshPublisherDesc(config Name: 'Tomcat_Deploy", transfers: [sshTransfer(cleanRemote: false, excludes:", execCommand: ", execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: 'L.]+*, remoteDirectory: 'apache-tomcat-10.1.30/webapps', remoteDirectorySDF: false, removePrefix: ", sourceFiles: SimpleWebApplication.war')], usePromotionTimestamp: false, use WorkspacelnPromotion: false, verbose: false)
+    }
+  }
+*/
+/*
+    stage('Deploy to Tomcat') {
+      agent {
+        label "Tomcat1"
+      }
+      steps {
+        sh 'sudo systemctl stop tomcat'
+      
+        sh 'sudo cp /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication*.war /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication_backup_$(date +"%Y%m%d%H%M%S").war || true'
+        
+        sh '''
+                #!/bin/bash
+               NEXUS_URL="http://13.201.120.172:8081/repository/maven-releases-javawebapp/http://13.201.120.172:8081/repository/maven-releases-javawebapp/com/maven/SimpleWebApplication/1.0.0/SimpleWebApplication-1.0.0.war"
+               LATEST_BUILD= curl -s "$NEXUS_URL" | tail -4 | head -1 | grep SimpleWebApplication-1.0.0-*.*-*.war
+             
+                wget --user=admin --password=admin http://13.201.120.172:8081/repository/maven-releases-javawebapp/com/maven/SimpleWebApplication/1.0.0/SimpleWebApplication-1.0.0.war -O /home/tomcat/apache-tomcat-10.1.30/webapps/
+                  
+      
+    '''
+        
+        sh 'sudo systemctl start tomcat'
+      }
+    }
+  */
+  }
+}
+post {
+    failure {
+      script {
+        mail (to: 'pratheshyadav67@gmail.com',
+              subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) failed",
+              body: "Please visit ${env.BUILD_URL} for further information"
+        )
+      }
+    }
+    success {
+      script {
+        mail (to: 'pratheshyadav67@gmail.com', 
+              subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) succeeded.",
+              body: "Please visit ${env.BUILD_URL} for further information."
+        )
+      }
+    }
+  }
