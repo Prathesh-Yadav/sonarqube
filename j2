@@ -82,12 +82,7 @@ pipeline {
                     sh """
                     curl -u admin:admin -O http://13.233.197.98:8081/repository/snapshotnew/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/maven-metadata.xml
                     """
-
-                    // Print the contents of maven-metadata.xml for debugging
-                    echo "Contents of maven-metadata.xml:"
-                    sh "cat maven-metadata.xml"
-                    
-                    
+                    sh "cat maven-metadata.xml"           
                 }
          }
      }
