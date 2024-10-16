@@ -3,7 +3,9 @@ pipeline {
   agent {
     label "Java"
   }
-  def value
+    environment {
+        value = '' // Declare the global variable here
+    }
   stages {
     stage('Build') {
       steps {
