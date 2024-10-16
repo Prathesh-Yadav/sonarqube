@@ -65,8 +65,8 @@ pipeline {
           nexusUrl: '13.201.120.172:8081/', 
           nexusVersion: 'nexus3', 
           protocol: 'http', 
-          repository: 'maven-releases-javawebapp', 
-          version: '1.0.0'
+          repository: 'maven-snapshots', 
+          version: '1.0.0-SNAPSHOTS'
         )
       }
     }
@@ -77,15 +77,16 @@ pipeline {
     }
   }
 */
+/*
     stage('Deploy to Tomcat') {
       agent {
         label "Tomcat"
       }
       steps {
         sh 'sudo systemctl stop tomcat'
-      /*
+      
         sh 'sudo cp /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication*.war /home/tomcat/apache-tomcat-10.1.30/webapps/SimpleWebApplication_backup_$(date +"%Y%m%d%H%M%S").war || true'
-        */
+        
         sh '''
                 #!/bin/bash
                NEXUS_URL="http://13.201.120.172:8081/repository/maven-releases-javawebapp/http://13.201.120.172:8081/repository/maven-releases-javawebapp/com/maven/SimpleWebApplication/1.0.0/SimpleWebApplication-1.0.0.war"
@@ -99,7 +100,7 @@ pipeline {
         sh 'sudo systemctl start tomcat'
       }
     }
-  
+  */
   }
 }
 post {
