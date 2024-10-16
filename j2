@@ -80,7 +80,7 @@ pipeline {
         script {
             // Download maven-metadata.xml from Nexus
             sh """
-            curl -u admin:admin -O http://13.201.0.144:8081/repository/snapshotnew/com/maven/SimpleWebApplication/maven-metadata.xml
+            curl -u admin:admin -O http://13.233.197.98:8081/repository/snapshotnew/com/maven/SimpleWebApplication/maven-metadata.xml
             """
 
             // Extract the latest version using shell commands
@@ -88,7 +88,7 @@ pipeline {
             def buildNumber = sh(script: "cat maven-metadata.xml | grep '<buildNumber>' | tail -n 1 | sed 's/.*<buildNumber>\\(.*\\)<\\/buildNumber>/\\1/'", returnStdout: true).trim()
 
             // Construct the URL of the latest artifact
-            def latestArtifactUrl = "http://13.201.0.144:8081/repository/snapshotnew/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/SimpleWebApplication-1.0.0-${timestamp}-${buildNumber}.war"
+            def latestArtifactUrl = "http://13.233.197.98:8081/repository/snapshotnew/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/SimpleWebApplication-1.0.0-${timestamp}-${buildNumber}.war"
             echo "Latest artifact URL: ${latestArtifactUrl}"
 
             // Download the latest WAR file
