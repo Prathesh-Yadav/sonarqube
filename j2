@@ -72,29 +72,36 @@ pipeline {
     }
   }
 */
-  stage('Download the application from Nexus to Tomcat server') {
+  stage('Download Latest WAR from Nexus') {
     agent {
-      label "Tomcat1"
-      }
+        label "Tomcat"
+    }
     steps {
         script {
-                    // Fetch maven-metadata.xml from Nexus
-                    def metadataUrl = 'http://13.233.197.98:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/maven-metadata.xml'
-                    def metadata = new XmlSlurper().parse(metadataUrl)
+            // Download maven-metadata.xml from Nexus
+            sh """
+            curl -u admin:admin -O http://13.201.0.144:8081/repository/snapshotnew/com/maven/SimpleWebApplication/maven-metadata.xml
+            """
 
-                    // Get timestamp and buildNumber
-                    def timestamp = metadata.versioning.snapshot.timestamp.text()
-                    def buildNumber = metadata.versioning.snapshot.buildNumber.text()
+            // Extract the latest version using shell commands
+            def timestamp = sh(script: "cat maven-metadata.xml | grep '<timestamp>' | tail -n 1 | sed 's/.*<timestamp>\\(.*\\)<\\/timestamp>/\\1/'", returnStdout: true).trim()
+            def buildNumber = sh(script: "cat maven-metadata.xml | grep '<buildNumber>' | tail -n 1 | sed 's/.*<buildNumber>\\(.*\\)<\\/buildNumber>/\\1/'", returnStdout: true).trim()
 
-                    // Construct the latest artifact URL
-                    def latestArtifactUrl = "http://13.233.197.98:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/SimpleWebApplication-1.0.0-${timestamp}-${buildNumber}.war"
-                    
-                    echo "Latest artifact URL: ${latestArtifactUrl}"
+            // Construct the URL of the latest artifact
+            def latestArtifactUrl = "http://13.201.0.144:8081/repository/snapshotnew/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/SimpleWebApplication-1.0.0-${timestamp}-${buildNumber}.war"
+            echo "Latest artifact URL: ${latestArtifactUrl}"
 
-                    // You can now use this URL to deploy or download the latest artifact
-                }
-	     }
-          }
+            // Download the latest WAR file
+            sh "curl -u admin:admin -O ${latestArtifactUrl}"
+
+            // Deploy the WAR to Tomcat
+            sh """
+            mv SimpleWebApplication-1.0.0-${timestamp}-${buildNumber}.war /home/tomcat1/apache-tomcat-10.1.31/webapps/
+            """
+        }
+    }
+}
+
       
 /*
     stage('Deploy to Tomcat') {
