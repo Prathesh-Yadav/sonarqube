@@ -55,7 +55,7 @@ pipeline {
           ]], 
           credentialsId: 'nexus-ssh', 
           groupId: 'com.maven', 
-          nexusUrl: '13.233.197.98:8081/', 
+          nexusUrl: '13.233.108.37:8081/', 
           nexusVersion: 'nexus3', 
           protocol: 'http', 
           repository: 'maven-snapshots', 
@@ -71,13 +71,13 @@ pipeline {
 	script {
                     // Download maven-metadata.xml from Nexus
                     sh """
-                    curl -u admin:admin -O http://13.233.197.98:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/maven-metadata.xml
+                    curl -u admin:admin -O http://13.233.108.37:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/maven-metadata.xml
 		    pwd
 		    ls -al
       		    """
       		    def value = sh(script: "grep '<value>' maven-metadata.xml | sed -e 's/.*<value>\\(.*\\)<\\/value>/\\1/'", returnStdout: true).trim()
         	    echo "Latest Artifact Version: $value"
-	            sh "curl -u admin:admin -O http://13.233.197.98:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/SimpleWebApplication-${value}.war"
+	            sh "curl -u admin:admin -O http://13.233.108.37:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/SimpleWebApplication-${value}.war"
 	     	    sh "pwd"
                 }
          }
