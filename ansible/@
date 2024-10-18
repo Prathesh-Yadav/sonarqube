@@ -1,0 +1,17 @@
+---
+- name: Playbook to copy Apache Tomcat directory
+  hosts: jenkins_server
+  become: yes  # The user on the target servers
+  become_user: root  # Use this if you want to escalate to root (default)
+  vars: 
+    ansible_ssh_timeout: 600
+  roles:
+    # - copying_apachefile
+    # - tomcat_unitfile
+    #- tomcat_dr
+    #- tomcat_enable
+    #- tomcat_start
+    #- tomcat_stop
+    #- latest_version
+    #- move_war_file
+    - back_up_war_file

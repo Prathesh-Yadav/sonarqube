@@ -1,0 +1,5 @@
+---
+# tasks for refresh the tomcat
+- name: refresh the tomcat configuration
+  shell: "sudo systemctl daemon-reload"
+  become_user: root

@@ -1,0 +1,5 @@
+---
+# tasks for starting the tomcat
+- name: Starting the tomcat
+  shell: "sudo systemctl start tomcat.service"
+  become_user: root

@@ -1,0 +1,5 @@
+---
+# tasks file for tomcat_stop
+- name: Stoping the tomcat
+  shell: "sudo systemctl stop tomcat.service"
+  become_user: root

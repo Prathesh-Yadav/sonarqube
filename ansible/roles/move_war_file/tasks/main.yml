@@ -1,0 +1,19 @@
+---
+# tasks file for move_war_file
+
+- name: Find the latest WAR file in the workspace
+  ansible.builtin.find:
+    paths: /home/tomcat1/workspace/JavaWebApp
+    patterns: 'SimpleWebApplication-*.war'
+    recurse: yes
+  register: war_file
+
+- name: Debug to show the found file
+  debug:
+    msg: "Found WAR file: {{ war_file.files[0].path }}"
+
+- name: Move the latest WAR file to the webapps directory
+  ansible.builtin.command:
+    cmd: mv "{{ war_file.files[0].path }}" /home/tomcat1/apache-tomcat-10.1.31/webapps/
+  when: war_file.matched > 0
+

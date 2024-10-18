@@ -1,0 +1,10 @@
+---
+# tasks file for latest_version
+- name: Download maven-metadata.xml from Nexus
+  get_url:
+    url: http://13.233.197.98:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/maven-metadata.xml
+    dest: /home/tomcat1/workspace/JavaWebApp/maven-metadata.xml
+    owner: tomcat1
+    group: tomcat1
+    url_username: admin
+    url_password: admin

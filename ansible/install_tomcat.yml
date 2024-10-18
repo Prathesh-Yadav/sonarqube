@@ -1,0 +1,14 @@
+---
+- name: Install and Extract the file
+  hosts: jenkins_server
+  become_user: worker1
+  become: true  
+  tasks:
+    - name: Install Apache tomcat
+      get_url:
+        url: https://dlcdn.apache.org/tomcat/tomcat-10/v10.1.31/bin/apache-tomcat-10.1.31.tar.gz
+        dest: /home/worker1
+        mode : 0644
+      become_user: root
+    - name: Extract the tar file
+      command: tar -zvxf apache-tomcat-10.1.31.tar.gz -C /home/worker1 
