@@ -8,9 +8,13 @@
     return_content: yes
   register: metadata_content
 
+- name: Debug the content of maven-metadata.xml
+  debug:
+    msg: "{{ metadata_content.content }}"
+
 - name: Extract the latest version from maven-metadata.xml
   set_fact:
-    latest_version: "{{ (metadata_content.content | regex_search('<value>(.*?)</value>')) | first }}"
+    latest_version: "{{ (metadata_content.content | regex_search('<version>(.*?)</version>')) | first | default('') }}"
 
 - name: Debug the latest version
   debug:
@@ -25,3 +29,4 @@
     group: tomcat1
     username: "{{ nexus_username }}"
     password: "{{ nexus_password }}"
+  when: latest_version != ''
