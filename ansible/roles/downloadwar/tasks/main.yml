@@ -18,17 +18,22 @@
   shell: "grep '<value>' /tmp/maven-metadata.xml | sed -e 's/.*<value>\\(.*\\)<\\/value>/\\1/'"
   register: version_output
 
+- name: Set the latest artifact version variable
+  set_fact:
+    latest_artifact_version: "{{ version_output.stdout }}"
+
 - name: Display the latest version extracted
   debug:
-    msg: "Latest Artifact Version: {{ version_output.stdout }}"
+    msg: "Latest Artifact Version: {{ latest_artifact_version }}"
 
 - name: Clean up temporary file
   file:
     path: /tmp/maven-metadata.xml
     state: absent
+
 - name: Download WAR from Nexus
   get_url:
-    url: "http://13.126.68.188:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/SimpleWebApplication-{{ Latest Artifact Version }}.war"
+    url: "http://13.126.68.188:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/SimpleWebApplication-{{ latest_artifact_version }}.war"
     dest: /home/tomcat1/apache-tomcat-10.1.31/webapps/
     mode: 0755
     owner: tomcat1
