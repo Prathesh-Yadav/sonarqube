@@ -1,7 +1,7 @@
 ---
 - name: Fetch maven-metadata.xml content from Nexus
   uri:
-    url: "http://13.126.68.188:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/maven-metadata.xml"
+    url: "{{ metadata_url }}"
     method: GET
     user: "{{ nexus_username }}"
     password: "{{ nexus_password }}"
@@ -33,7 +33,7 @@
 
 - name: Download WAR from Nexus
   get_url:
-    url: "http://13.126.68.188:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/SimpleWebApplication-{{ latest_artifact_version }}.war"
+    url: "{{ app_url }}"
     dest: /home/tomcat1/apache-tomcat-10.1.31/webapps/
     mode: 0755
     owner: tomcat1
