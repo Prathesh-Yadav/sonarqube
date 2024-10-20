@@ -15,7 +15,7 @@
 
 - name: Extract the latest version from maven-metadata.xml
   set_fact:
-    latest_version: "{{ (metadata_content.content | regex_search('<value>(.*?)</value>')) | first | default('') }}"
+    latest_version: "{{ (metadata_content.content | regex_search('<value>(.*?)</value>')) | first | default('No version found') }}"
 
 - name: Debug the latest version
   debug:
