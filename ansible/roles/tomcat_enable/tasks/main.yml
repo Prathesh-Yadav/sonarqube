@@ -1,5 +1,0 @@
----
-# tasks for enable the tomcat
-- name: Enable the tomcat
-  shell: "sudo systemctl enable tomcat.service"
-  become_user: root

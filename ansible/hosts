@@ -1,3 +1,2 @@
-[jenkins_server]
-172.31.13.203 ansible_user=tomcat1 ansible_sudo_pass=Manvik@123
-
+[tomcatServers]
+172.31.13.203 ansible_user=tomcat1
