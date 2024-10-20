@@ -1,41 +1,28 @@
 ---
-- name: Download the latest application WAR from Nexus
-  hosts: all
-  tasks:
-    - name: Fetch maven-metadata.xml content from Nexus
-      uri:
-        url: "http://13.233.108.37:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/maven-metadata.xml"
-        method: GET
-        user: "{{ nexus_username }}"
-        password: "{{ nexus_password }}"
-        force_basic_auth: yes
-        return_content: yes
-      register: metadata_content
+- name: Fetch maven-metadata.xml content from Nexus
+  uri:
+    url: "http://13.233.108.37:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/maven-metadata.xml"
+    method: GET
+    user: "{{ nexus_username }}"
+    password: "{{ nexus_password }}"
+    force_basic_auth: yes
+    return_content: yes
+  register: metadata_content
 
-    - name: Extract the latest version from maven-metadata.xml
-      set_fact:
-        latest_version: "{{ metadata_content.content | regex_search('<value>(.*?)</value>', '\\1') }}"
-    
-    - name: Debug the latest version
-      debug:
-        msg: "Latest Artifact Version: {{ latest_version }}"
+- name: Extract the latest version from maven-metadata.xml
+  set_fact:
+    latest_version: "{{ metadata_content.content | regex_search('<value>(.*?)</value>', '\\1') }}"
 
-    - name: Download the latest WAR file from Nexus
-      get_url:
-        url: "http://13.233.108.37:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/SimpleWebApplication-{{ latest_version }}.war"
-        dest: /home/tomcat1/apache-tomcat-10.1.31/webapps/
-        mode: 0755
-        owner: tomcat1
-        group: tomcat1
-        username: "{{ nexus_username }}"
-        password: "{{ nexus_password }}"
+- name: Debug the latest version
+  debug:
+    msg: "Latest Artifact Version: {{ latest_version }}"
 
-    - name: List files in the webapps directory (optional)
-      shell: |
-        ls -al /home/tomcat1/apache-tomcat-10.1.31/webapps/
-      register: list_files
-      changed_when: false
-
-    - name: Debug the file list
-      debug:
-        msg: "{{ list_files.stdout }}"
+- name: Download the latest WAR file from Nexus
+  get_url:
+    url: "http://13.233.108.37:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/SimpleWebApplication-{{ latest_version }}.war"
+    dest: /home/tomcat1/apache-tomcat-10.1.31/webapps/
+    mode: 0755
+    owner: tomcat1
+    group: tomcat1
+    username: "{{ nexus_username }}"
+    password: "{{ nexus_password }}"
