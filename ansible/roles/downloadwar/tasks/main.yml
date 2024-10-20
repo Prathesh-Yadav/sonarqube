@@ -26,3 +26,13 @@
   file:
     path: /tmp/maven-metadata.xml
     state: absent
+- name: Download WAR from Nexus
+  get_url:
+    url: "http://13.126.68.188:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/SimpleWebApplication-{{ Latest Artifact Version }}.war"
+    dest: /home/tomcat1/apache-tomcat-10.1.31/webapps/
+    mode: 0755
+    owner: tomcat1
+    group: tomcat1
+    username: "{{ nexus_username }}"
+    password: "{{ nexus_password }}"
+  register: download_war
