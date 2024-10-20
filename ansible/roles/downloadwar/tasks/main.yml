@@ -9,14 +9,20 @@
     return_content: yes
   register: metadata_content
 
-- name: Debug the content of maven-metadata.xml
-  debug:
-    msg: "{{ metadata_content.content }}"
+- name: Save the content to a temporary file
+  copy:
+    content: "{{ metadata_content.content }}"
+    dest: /tmp/maven-metadata.xml
 
-- name: Extract the latest version from maven-metadata.xml using regex
-  set_fact:
-    latest_version: "{{ (metadata_content.content | regex_search('<value>(.*?)</value>')) | first | default('No version found') }}"
+- name: Extract latest version from maven-metadata.xml using shell command
+  shell: "grep '<value>' /tmp/maven-metadata.xml | sed -e 's/.*<value>\\(.*\\)<\\/value>/\\1/'"
+  register: version_output
 
-- name: Debug the latest version
+- name: Display the latest version extracted
   debug:
-    msg: "Latest Artifact Version: {{ latest_version }}"
+    msg: "Latest Artifact Version: {{ version_output.stdout }}"
+
+- name: Clean up temporary file
+  file:
+    path: /tmp/maven-metadata.xml
+    state: absent
