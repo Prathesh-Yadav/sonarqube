@@ -13,9 +13,9 @@
   debug:
     msg: "{{ metadata_content.content }}"
 
-- name: Extract the latest version from maven-metadata.xml
+- name: Parse XML content to extract the latest version
   set_fact:
-    latest_version: "{{ (metadata_content.content | regex_search('<value>(.*?)</value>')) | first | default('No version found') }}"
+    latest_version: "{{ (metadata_content.content | from_yaml)['metadata']['versioning']['snapshot']['snapshotVersions']['snapshotVersion'][0]['value'] }}"
 
 - name: Debug the latest version
   debug:
