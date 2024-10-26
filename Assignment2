@@ -55,6 +55,10 @@ pipeline {
       }
       steps{
         script {
+                    dir('docker') {
+                        // Build the Docker image
+                        sh 'docker build -t tomcat_image:1.0 .'
+                    }
                    // Run the Docker container
                     sh 'docker run -d --name tomcat_container -p 8080:8080 tomcat_image:1.0'
           }
