@@ -51,12 +51,12 @@ pipeline {
     }
     stage('Deploy to Tomcat') {
       agent {
-        label "ansible"
+        label "docker1"
       }
       steps{
         script {
-          withCredentials([usernamePassword(credentialsId: 'nexus-jenkins', usernameVariable: 'nexus_username', passwordVariable: 'nexus_password')]) {
-            sh 'ansible-playbook -i ansible/hosts ansible/playbook.yml'
+                   // Run the Docker container
+                    sh 'docker run -d -p 8080:8080 --tomcat_container tomcat_image:1.0'
           }
         }
       }
