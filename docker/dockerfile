@@ -11,11 +11,11 @@ RUN mkdir -p /home/tomcat/apache-tomcat-10.1.31/webapps/backup
 RUN if [ -f "/home/tomcat/apache-tomcat-10.1.31/webapps/SimpleWebApplication-*.war" ]; then \
       mv /home/tomcat/apache-tomcat-10.1.31/webapps/SimpleWebApplication-*.war /home/tomcat/apache-tomcat-10.1.31/webapps/backup/; \
     fi
-
+ARG CACHEBUST=1
 RUN LATEST_VERSION=$(curl -s -u admin:admin http://3.6.93.189:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/maven-metadata.xml \
       | grep -oPm1 "(?<=<value>)[^<]+") && \
     curl -u admin:admin -o /home/tomcat/apache-tomcat-10.1.31/webapps/SimpleWebApplication-${LATEST_VERSION}.war \
-      http://3.6.93.189:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/SimpleWebApplication-${LATEST_VERSION}.war
+      http://3.6.93.189:8081/repository/maven-snapshots/com/maven/SimpleWebApplication/1.0.0-SNAPSHOT/SimpleWebApplication-${LATEST_VERSION}.war || echo "No new war filefound."
 
 
 RUN chmod -R 777 /home/tomcat
