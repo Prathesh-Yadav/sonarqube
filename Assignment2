@@ -55,6 +55,7 @@ pipeline {
       }
       steps{
         script {
+                        sh 'docker system prune -a'
                     dir('docker') {
                         // Build the Docker image
                         sh 'docker build -t tomcat_image:1.0 .'
