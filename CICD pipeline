@@ -50,7 +50,10 @@ pipeline {
             steps {
                 script {
                     // Push the Docker image to Docker Hub
-                    docker.push("${IMAGE_NAME}:${TAG}")
+                    // Use docker.image(IMAGE_NAME) to push
+                    docker.withRegistry('https://registry.hub.docker.com', DOCKER_HUB_CREDENTIALS) {
+                        docker.image("${IMAGE_NAME}:${TAG}").push()
+                    }
                 }
             }
         }
