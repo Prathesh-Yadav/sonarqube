@@ -6,7 +6,6 @@ pipeline {
         DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials' // Docker Hub credentials ID in Jenkins
         IMAGE_NAME = 'prathesh67/my-java-webapp'  // Docker image name
         TAG = 'latest'  // Image tag
-        WAR_FILE_PATH = '/home/jslave/.m2/repository/com/maven/SimpleWebApplication/9.1.14/SimpleWebApplication-9.1.14.war'  // Path to the .war file
     }
     stages {
         stage('Checkout') {
@@ -24,15 +23,15 @@ pipeline {
         stage('Copy WAR File to Workspace') {
             steps {
                 script {
-                    // Copy the .war file into the Jenkins workspace
-                    sh "cp ${WAR_FILE_PATH} ."
+                    // Copy the .war file into the Jenkins workspace (this will make it accessible to the Docker build)
+                    sh "cp /home/jslave/.m2/repository/com/maven/SimpleWebApplication/9.1.14/SimpleWebApplication-9.1.14.war /home/jslave/workspace/Assignment/SimpleWebApplication-9.1.14.war"
                 }
             }
         }
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build the Docker image, now using the copied .war file
+                    // Build the Docker image using the copied .war file in the workspace
                     sh "docker build -t ${IMAGE_NAME}:${TAG} ."
                 }
             }
